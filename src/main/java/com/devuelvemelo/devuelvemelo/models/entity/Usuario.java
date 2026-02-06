@@ -35,7 +35,7 @@ public class Usuario {
     
     @NotNull(message = "El teléfono celular es obligatorio")
     @Size(min = 8, max = 15, message = "El teléfono celular debe tener entre 8 y 15 dígitos")
-    private Integer telefonoCelular;
+    private String telefonoCelular;
 
     @Column(unique = true, nullable = false)
     @NotNull(message = "El email es obligatorio")

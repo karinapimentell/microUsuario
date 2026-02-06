@@ -38,7 +38,7 @@ public class UsuarioService {
                 return "Error: El email ya está en uso";
             }
 
-            // 3. Guardar directamente (Ya que 'Usuario' es tu entidad)
+            // 3. Guardar el usuario
             usuarioRepository.save(usuario);
             return "Usuario registrado exitosamente en Devuélvemelo";
 

@@ -22,20 +22,26 @@ public class UsuarioIntegrationTest {
 
     @Test
     public void testFlujoCompletoUsuario() {
-        Usuario nuevo = new Usuario();
-        nuevo.setRut("88888888-8");
-        nuevo.setNombre("Marta Gomez");
-        nuevo.setEmail("marta@test.com");
+        Usuario nuevo = Usuario.builder()
+        .rut("88888888-8")
+        .nombre("Marta")
+        .apellidos("Gomez")
+        .telefonoCelular("987654321")
+        .email("marta@test.com")
+        .password("Password@123")
+        .build();
 
-        // 1. Probar Creación
+
+        // Crear
         String resCrear = usuarioService.crearUsuarioConFoto(nuevo, null);
         assertEquals("Usuario creado con éxito", resCrear);
 
-        // 2. Probar que existe en BD
-        assertTrue(usuarioRepository.findByRut("88888888-8").isPresent());
+        // Validar guardado
+        Usuario guardado = usuarioRepository.findByRut("88888888-8").orElseThrow();
+        assertEquals("Marta", guardado.getNombre());
 
-        // 3. Probar Eliminación
+        // Eliminar
         String resEliminar = usuarioService.eliminarUsuario("88888888-8");
-        assertEquals("Usuario eliminado del sistema", resEliminar);
+        assertEquals("Usuario eliminado del sistema", resEliminar); 
     }
 }
