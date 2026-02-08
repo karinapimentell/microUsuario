@@ -25,27 +25,24 @@ public class UsuarioService {
 
     @Transactional
     public String crearUsuario(Usuario usuario) {
-        try {
-            // 1. Validación de objeto nulo
-            if (usuario == null) return "Error: Datos de usuario no proporcionados";
 
-            // 2. Validaciones de lógica de negocio (El RUT es vital en Devuélvemelo)
-            if (usuarioRepository.findByRut(usuario.getRut()).isPresent()) {
-                return "Error: El RUT ya se encuentra registrado";
-            }
+        if (usuario == null) 
+            throw new RuntimeException("Datos de usuario no proporcionados");
 
-            if (usuarioRepository.findByEmail(usuario.getEmail()).isPresent()) {
-                return "Error: El email ya está en uso";
-            }
-
-            // 3. Guardar el usuario
-            usuarioRepository.save(usuario);
-            return "Usuario registrado exitosamente en Devuélvemelo";
-
-        } catch (Exception e) {
-            return "Error interno: " + e.getMessage();
+        if (usuarioRepository.findByRut(usuario.getRut()).isPresent()) {
+            throw new RuntimeException("El RUT ya se encuentra registrado");
         }
+
+        if (usuarioRepository.findByEmail(usuario.getEmail()).isPresent()) {
+            throw new RuntimeException("El email ya está en uso");
+        }
+
+        usuarioRepository.save(usuario);
+
+        return "Usuario registrado exitosamente en Devuélvemelo";
     }
+
+
 
     public List<Usuario> obtenerTodos() {
         return usuarioRepository.findAll();
