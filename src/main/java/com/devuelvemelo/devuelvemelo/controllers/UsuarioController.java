@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
 
 import java.util.List;
 
@@ -67,17 +67,4 @@ public class UsuarioController {
         return ResponseEntity.ok(respuesta);
     }
 
-    @Operation(summary = "Registrar usuario con foto", description = "Permite subir una imagen desde el dispositivo")
-    @PostMapping(value = "/registro", consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> registrar(
-    @RequestPart("usuario") Usuario usuario, 
-    @RequestPart(value = "foto", required = false) MultipartFile foto) {
-    
-        String respuesta = usuarioService.crearUsuarioConFoto(usuario, foto);
-    
-        if (respuesta.contains("Error")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respuesta);
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
-    }
 }

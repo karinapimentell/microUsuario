@@ -1,17 +1,20 @@
 package com.devuelvemelo.devuelvemelo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
 import org.mockito.MockitoAnnotations;
 
 import com.devuelvemelo.devuelvemelo.models.entity.Usuario;
 import com.devuelvemelo.devuelvemelo.repositories.UsuarioRepository;
 import com.devuelvemelo.devuelvemelo.services.UsuarioService;
+
 import java.util.Optional;
 
 public class TestUsuario {
@@ -31,37 +34,48 @@ public class TestUsuario {
         usuario.setRut("12345678-9");
         usuario.setNombre("Juan Pérez");
         usuario.setEmail("juan.perez@example.com");
+        usuario.setPassword("1234");
     }
 
     @Test
     public void testCrearUsuario_Exitoso() {
-        // Simulamos que el RUT no existe
-        when(usuarioRepository.existsByRut(usuario.getRut())).thenReturn(false);
-        when(usuarioRepository.save(any(Usuario.class))).thenReturn(usuario);
 
-        // Llamamos al método que tienes en tu Service (pasando null en la foto)
-        String resultado = usuarioService.crearUsuarioConFoto(usuario, null);
+        // Simular que no existe ni RUT ni email
+        when(usuarioRepository.findByRut(usuario.getRut()))
+                .thenReturn(Optional.empty());
 
-        // Mensaje exacto de tu UsuarioService
-        assertEquals("Usuario creado con éxito", resultado);
+        when(usuarioRepository.findByEmail(usuario.getEmail()))
+                .thenReturn(Optional.empty());
+
+        when(usuarioRepository.save(any(Usuario.class)))
+                .thenReturn(usuario);
+
+        String resultado = usuarioService.crearUsuario(usuario);
+
+        assertEquals("Usuario registrado exitosamente en Devuélvemelo", resultado);
         verify(usuarioRepository, times(1)).save(any(Usuario.class));
     }
 
     @Test
     public void testCrearUsuario_RutDuplicado() {
-        // Simulamos que el RUT ya existe
-        when(usuarioRepository.existsByRut(usuario.getRut())).thenReturn(true);
 
-        String resultado = usuarioService.crearUsuarioConFoto(usuario, null);
+        when(usuarioRepository.findByRut(usuario.getRut()))
+                .thenReturn(Optional.of(usuario));
 
-        // Mensaje exacto de tu UsuarioService
-        assertEquals("Error: RUT duplicado", resultado);
+        RuntimeException exception = org.junit.jupiter.api.Assertions.assertThrows(
+                RuntimeException.class,
+                () -> usuarioService.crearUsuario(usuario)
+        );
+
+        assertEquals("El RUT ya se encuentra registrado", exception.getMessage());
         verify(usuarioRepository, never()).save(any(Usuario.class));
     }
 
     @Test
     public void testEliminarUsuario_NoExistente() {
-        when(usuarioRepository.findByRut(anyString())).thenReturn(Optional.empty());
+
+        when(usuarioRepository.findByRut(anyString()))
+                .thenReturn(Optional.empty());
 
         String resultado = usuarioService.eliminarUsuario("1-1");
 

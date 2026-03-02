@@ -1,6 +1,7 @@
 package com.devuelvemelo.devuelvemelo;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,19 +23,19 @@ public class UsuarioIntegrationTest {
 
     @Test
     public void testFlujoCompletoUsuario() {
-        Usuario nuevo = Usuario.builder()
-        .rut("88888888-8")
-        .nombre("Marta")
-        .apellidos("Gomez")
-        .telefonoCelular("987654321")
-        .email("marta@test.com")
-        .password("Password@123")
-        .build();
 
+        Usuario nuevo = Usuario.builder()
+                .rut("88888888-8")
+                .nombre("Marta")
+                .apellidos("Gomez")
+                .telefonoCelular("987654321")
+                .email("marta@test.com")
+                .password("Password@123")
+                .build();
 
         // Crear
-        String resCrear = usuarioService.crearUsuarioConFoto(nuevo, null);
-        assertEquals("Usuario creado con éxito", resCrear);
+        String resCrear = usuarioService.crearUsuario(nuevo);
+        assertEquals("Usuario registrado exitosamente en Devuélvemelo", resCrear);
 
         // Validar guardado
         Usuario guardado = usuarioRepository.findByRut("88888888-8").orElseThrow();
@@ -42,6 +43,6 @@ public class UsuarioIntegrationTest {
 
         // Eliminar
         String resEliminar = usuarioService.eliminarUsuario("88888888-8");
-        assertEquals("Usuario eliminado del sistema", resEliminar); 
+        assertEquals("Usuario eliminado del sistema", resEliminar);
     }
 }

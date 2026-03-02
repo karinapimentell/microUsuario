@@ -1,19 +1,9 @@
 package com.devuelvemelo.devuelvemelo.services;
 
-import java.util.UUID;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.Files;
-import java.io.IOException;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import jakarta.transaction.Transactional;
-
 import com.devuelvemelo.devuelvemelo.models.entity.Usuario;
 import com.devuelvemelo.devuelvemelo.repositories.UsuarioRepository;
 
@@ -73,31 +63,5 @@ public class UsuarioService {
         }).orElse("No se pudo eliminar: Usuario no encontrado");
     }
 
-    public String crearUsuarioConFoto(Usuario usuario, MultipartFile foto) {
-    if (usuarioRepository.existsByRut(usuario.getRut())) {
-        return "Error: RUT duplicado";
-    }
-
-    if (foto != null && !foto.isEmpty()) {
-        try {
-            // Definir ruta (C:/uploads/ o similar)
-            String nombreFoto = UUID.randomUUID().toString() + "_" + foto.getOriginalFilename();
-            Path rutaPath = Paths.get("uploads").resolve(nombreFoto).toAbsolutePath();
-            
-            // Crear carpeta si no existe
-            Files.createDirectories(rutaPath.getParent());
-            
-            // Guardar el archivo físico
-            Files.copy(foto.getInputStream(), rutaPath);
-            
-            // Guardar la ruta en el objeto usuario
-            usuario.setImagenUrl("/uploads/" + nombreFoto);
-        } catch (IOException e) {
-            return "Error al subir la foto: " + e.getMessage();
-        }
-    }
-
-    usuarioRepository.save(usuario);
-    return "Usuario creado con éxito";
-}
+    
 }

@@ -30,8 +30,6 @@ public class Usuario {
     @NotNull(message = "Los apellidos son obligatorios")
     @Size(max = 50, message = "Los apellidos no pueden tener más de 50 caracteres")
     private String apellidos;
-
-    private String codPais;
     
     @NotNull(message = "El teléfono celular es obligatorio")
     @Size(min = 8, max = 15, message = "El teléfono celular debe tener entre 8 y 15 dígitos")
@@ -50,6 +48,5 @@ public class Usuario {
              message = "La contraseña debe contener al menos un número, una letra mayúscula, una minúscula y un carácter especial")
     private String password;
 
-    // Se guardará el nombre o link de la foto
-    private String imagenUrl;
+    
 }
